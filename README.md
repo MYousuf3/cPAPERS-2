@@ -1,23 +1,24 @@
-# cPAPERS: A Dataset of Situated and Multimodal Interactive Conversations in Scientific Papers
+# Conversational Papers (cPAPERS): A Dataset of Situated and Multimodal Interactive Conversations in Scientific Papers
 
 This repository contains the code and dataset for the paper:  
-**cPAPERS: A Dataset of Situated and Multimodal Interactive Conversations in Scientific Papers**  
+**Conversational Papers (cPAPERS): A Dataset of Situated and Multimodal Interactive Conversations in Scientific Papers**  
 [ArXiv link](#)
 
 The cPAPERS dataset is available on [Hugging Face](https://huggingface.co/datasets/avalab/cPAPERS).
 
 ## Table of Contents
 - [Introduction](#introduction)
-- [Dataset Collection](#dataset-collection)
+- [Usage](#usage)
 - [Experiments](#experiments)
 - [Citation](#citation)
 - [License](#license)
 
 ## Introduction
 Conversational Papers (cPAPERS) is a dataset of conversations in English situated in scientific texts. cPAPERS consists of question-answer pairs pertaining to figures (cPAPERS-FIGS), equations (cPAPERS-EQNS), or tabular information (cPAPERS-TBLS) from scientific papers. 
-cPAPERS is designed to facilitate research on interactive and conversational AI within the context of scientific papers. It includes question-answer pairs, extracted figures, tables, equations in LaTeX format, and their surrounding context and references in the papers.
 
-## Dataset Collection
+cPAPERS is designed to facilitate research on interactive conversations within the context of scientific papers. It includes question-answer pairs, extracted figures, tables, equations in LaTeX format, and their surrounding context and references in the papers.
+
+## Usage
 To collect question-answer pairs and other relevant data, follow these steps:
 
 1. **Navigate to the data collection folder:**
@@ -107,8 +108,8 @@ If you use this dataset in your research, please cite our paper:
 
 ```bibtex
 @article{your2024cpapers,
-  title={cPAPERS: A Dataset of Situated and Multimodal Interactive Conversations in Scientific Papers},
-  author={Anirudh Sundar, Jin Xu, William Gay, Christopher Richardson, Larry Heck},
+  title={Conversational Papers (cPAPERS): A Dataset of Situated and Multimodal Interactive Conversations in Scientific Papers},
+  author={Author Names},
   journal={arXiv preprint arXiv:XXXX.XXXXX},
   year={2024}
 }
