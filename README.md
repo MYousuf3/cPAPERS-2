@@ -14,9 +14,8 @@ The cPAPERS dataset is available on [Hugging Face](https://huggingface.co/datase
 - [License](#license)
 
 ## Introduction
-cPAPERS is dataset of conversational question-answer pairs from reviews of academic papers
-grounded in these paper components and their associated references from scientific documents
-available on arXiv. 
+Conversational Papers (cPAPERS) is a dataset of conversations in English situated in scientific texts. cPAPERS consists of question-answer pairs pertaining to figures (cPAPERS-FIGS), equations (cPAPERS-EQNS), or tabular information (cPAPERS-TBLS) from scientific papers. 
+cPAPERS is designed to facilitate research on interactive and conversational AI within the context of scientific papers. It includes question-answer pairs, extracted figures, tables, equations in LaTeX format, and their surrounding context and references in the papers.
 
 ## Dataset Collection
 To collect question-answer pairs and other relevant data, follow these steps:
