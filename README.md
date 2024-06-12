@@ -14,7 +14,9 @@ The cPAPERS dataset is available on [Hugging Face](https://huggingface.co/datase
 - [License](#license)
 
 ## Introduction
-cPAPERS is a dataset designed to facilitate research on interactive conversations within the context of scientific papers. It includes question-answer pairs, extracted figures, tables, equations, and their surrounding context from scientific papers.
+cPAPERS is dataset of conversational question-answer pairs from reviews of academic papers
+grounded in these paper components and their associated references from scientific documents
+available on arXiv. 
 
 ## Dataset Collection
 To collect question-answer pairs and other relevant data, follow these steps:
@@ -107,7 +109,7 @@ If you use this dataset in your research, please cite our paper:
 ```bibtex
 @article{your2024cpapers,
   title={cPAPERS: A Dataset of Situated and Multimodal Interactive Conversations in Scientific Papers},
-  author={Author Names},
+  author={Anirudh Sundar, Jin Xu, William Gay, Christopher Richardson, Larry Heck},
   journal={arXiv preprint arXiv:XXXX.XXXXX},
   year={2024}
 }
