@@ -2,7 +2,7 @@
 
 This repository contains the code and dataset for the paper:  
 **Conversational Papers (cPAPERS): A Dataset of Situated and Multimodal Interactive Conversations in Scientific Papers**  
-[ArXiv link](#)
+[ArXiv link](https://arxiv.org/abs/2406.08398)
 
 The cPAPERS dataset is available on [Hugging Face](https://huggingface.co/datasets/avalab/cPAPERS).
 
@@ -108,8 +108,8 @@ If you use this dataset in your research, please cite our paper:
 
 ```bibtex
 @article{your2024cpapers,
-  title={Conversational Papers (cPAPERS): A Dataset of Situated and Multimodal Interactive Conversations in Scientific Papers},
-  author={Author Names},
-  journal={arXiv preprint arXiv:XXXX.XXXXX},
+  title={cPAPERS: A Dataset of Situated and Multimodal Interactive Conversations in Scientific Papers},
+  author={Anirudh Sundar, Jin Xu, William Gay, Christopher Richardson, Larry Heck},
+  journal={arXiv preprint arXiv:2406.08398},
   year={2024}
 }
