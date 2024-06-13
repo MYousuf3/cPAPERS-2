@@ -107,7 +107,7 @@ To reproduce the experiments discussed in the paper, use the following commands:
 If you use this dataset in your research, please cite our paper:
 
 ```bibtex
-@article{your2024cpapers,
+@article{sundar2024cpapers,
   title={cPAPERS: A Dataset of Situated and Multimodal Interactive Conversations in Scientific Papers},
   author={Anirudh Sundar, Jin Xu, William Gay, Christopher Richardson, Larry Heck},
   journal={arXiv preprint arXiv:2406.08398},
