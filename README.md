@@ -109,7 +109,7 @@ If you use this dataset in your research, please cite our paper:
 ```bibtex
 @article{sundar2024cpapers,
   title={cPAPERS: A Dataset of Situated and Multimodal Interactive Conversations in Scientific Papers},
-  author={Anirudh Sundar, Jin Xu, William Gay, Christopher Richardson, Larry Heck},
+  author={Sundar, Anirudh and Xu, Jin and Gay, William and Richardson, Christopher and Heck, Larry},
   journal={arXiv preprint arXiv:2406.08398},
   year={2024}
 }
