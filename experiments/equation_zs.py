@@ -31,46 +31,51 @@ def eval(responses, ground_truth):
 
 if __name__ == "__main__":
     parser = ArgumentParser()
-    parser.add_argument("--model", type=str, default="meta-llama/Llama-2-70b-chat-hf")
+    parser.add_argument("--file", type=str, help="Response file to evaluate", required=True)
     
-    parser.add_argument("--modality", help='modality to use -> equation, context, or reference', choices=['equation', 'context', 'reference'])
-    
-    parser.add_argument('--use', help="use all equations or neighboring equations", choices=['all', 'neighboring'])
-
-    parser.add_argument('--split', help="evaluate on dev/test", choices=["dev", "test"], default="dev")
-
-    parser.add_argument('--temperature', type=float, help="temperature", choices=[0, 0.1, 0.3, 0.5, 0.7, 0.9],  default=0)
-
-    parser.add_argument('--seed', type=int, default=5731)
+    # Original arguments (commented out)
+    # parser.add_argument("--model", type=str, default="meta-llama/Llama-3.1-8B-Instruct")
+    # parser.add_argument("--modality", help='modality to use -> equation, context, or reference', choices=['equation', 'context', 'reference'])
+    # parser.add_argument('--use', help="use all equations or neighboring equations", choices=['all', 'neighboring'])
+    # parser.add_argument('--split', help="evaluate on dev/test", choices=["dev", "test"], default="dev")
+    # parser.add_argument('--temperature', type=float, help="temperature", choices=[0, 0.1, 0.3, 0.5, 0.7, 0.9],  default=0)
+    # parser.add_argument('--seed', type=int, default=5731)
 
     args = parser.parse_args()
 
-    model = args.model
+    # Load the responses from the specified file
+    output_data = utils.load_jsonl(f"./outputs/{args.file}")
+    responses = [item['response'] for item in output_data]
+    ground_truth = [item['ground_truth'] for item in output_data]
+    
+    # Original code (commented out)
+    # model = args.model
+    # data = utils.load_jsonl(f'../data collection/neurips/2021/final_equation.json')
 
-    data = utils.load_jsonl(f'./cPAPERS/dataset/{args.split}/equation_final.jsonl')
-
+    # Original code for generating responses (commented out)
+    """
     prompts = []
     ground_truth = []
     for idx in range(len(data)):
         datum = data[idx]
 
-        # Use neighboring equations/contexts/references or all of them
-        # Using all of them causes context to be too long 
-        if args.use=='neighboring':
-            equations = datum['neighboring_equations']
-            contexts = datum['neighboring_contexts']
-            references = datum['neighboring_references']
-        elif args.use=='all':
-            equations = datum['equations']
-            contexts = datum['contexts']
-            references = datum['references']
+        # Extract equations, contexts and references from the equation array
+        equations = []
+        contexts = []
+        references = []
+        
+        # In the 'all' case, we use all equations from the array
+        # In the 'neighboring' case, we only use the first equation (closest match)
+        eq_list = datum['equation']
+        if args.use == 'neighboring' and len(eq_list) > 0:
+            eq_list = [eq_list[0]]
+            
+        for eq in eq_list:
+            equations.append(eq['equation'])
+            contexts.extend(eq.get('context', []))
+            references.extend(eq.get('references', []))
 
         user_message = datum['question']
-
-        # Consider the case where only the question refers to the equation
-        # pattern_equation = re.compile(r'\b(?:Equation|Eq\.?)\s*\(?\s*\d+\)?\b', re.IGNORECASE)
-        # if re.search(pattern_equation, user_message)==None:
-            # continue
 
         if args.modality=='equation':
             system_prompt = f"Equation: {equations}"
@@ -85,36 +90,21 @@ if __name__ == "__main__":
             system_prompt = ""
             modality = ""
 
-        # prompt = f"<s>[INST] <<SYS>> Answer the question in the user's message. Additional information is provided as context after the user's question. <</SYS>> User message: {user_message}. Context: {system_prompt} [/INST]"
         prompt = f"<s>[INST] <<SYS>> Answer the question in the user's message. Additional information is provided as context before the user's question. <</SYS>> Context: {system_prompt} User message: {user_message}.[/INST]"
         prompts.append(prompt)
         ground_truth.append(datum['answer'])
 
     responses = lm.generate_responses_zs_vllm(prompts, args, max_tokens=512)
-
-    # import bpdb; bpdb.set_trace()
-
     output_data = [{'response':responses[i], 'ground_truth':ground_truth[i]} for i in range(len(responses))]
 
     if not(os.path.exists('./outputs')):
         os.makedirs('./outputs')
 
     utils.write_jsonl(output_data, f"./outputs/equation_zs_responses_{modality}_{args.use}.jsonl")
+    """
     
-    from evaluation import evaluator
-
+    print(f"\nEvaluating {len(responses)} responses from {args.file}")
+    
+    # Initialize evaluator and print results
     Evaluator = evaluator(responses, ground_truth)
-    
     Evaluator.print_results()
-    
-    # eval(responses, ground_truth)
-
-    
-
-    
-
-    
-
-
-
-

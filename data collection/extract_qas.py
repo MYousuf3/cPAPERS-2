@@ -161,15 +161,13 @@ def check_for_qa_and_reference(base_path):
 
     count = 0
     for i, item in tqdm(enumerate(or_data)):
-        # if not os.path.exists(f"papers/{item['paper_id']}.tar.gz"):
-        # print(base_path + f"extracted_files/{item['paper_id']}.tar.gz") 
-        if not os.path.exists(base_path + f"extracted_files/{item['paper_id']}.tar"):
-            print(f"Folder {item['paper_id']} does not exist")
+        # Debug: print the full path and repr of paper_id for the first 10 items
+        if not os.path.exists(base_path + f"tar_files/{item['paper_id']}.tar.gz"):
+            print(f"Tar file tar_files/{item['paper_id']}.tar.gz does not exist")
             count += 1
             continue
         
         if "review" in item and "comment" in item:
-            print(f"Processing item {i}")
 
 
             has_figure = re.search(pattern_figure, item["review"] + item["comment"])
@@ -228,16 +226,8 @@ def extract_qa_pairs(text):
     except Exception as e:
         return None
 
-def extract_qas(or_data, type, path):
-    model = "meta-llama/Llama-2-70b-chat-hf"
-    tokenizer = AutoTokenizer.from_pretrained(model)
-    gpus = 8
-
-    llm = LLM(
-            model, 
-            tokenizer_mode="auto",
-            tensor_parallel_size=gpus, 
-            enforce_eager=True)
+def extract_qas(or_data, type, path, tokenizer, llm):
+    
         
     sampling_params = SamplingParams(
             top_k=10,
@@ -254,26 +244,35 @@ def extract_qas(or_data, type, path):
     if type == 'table':
         prompt_batch = [get_qapairs_llama_table(item["review"], item["comment"]) for item in or_data]
 
-    print(len(prompt_batch))
-
-    outputs = llm.generate(prompt_batch, sampling_params=sampling_params)
+    try:
+        outputs = llm.generate(prompt_batch, sampling_params=sampling_params)
+    except Exception as e:
+        print(f"Error during llm.generate: {e}")
+        outputs = []
     for idx, output in enumerate(outputs):
-        output = output.outputs[0].text
-        print(output)
-        or_data[idx]["extracted_qa"] = output
+        # print(f"Output {idx}: {getattr(output, 'outputs', None)}")
+        if hasattr(output, 'outputs') and output.outputs:
+            text = output.outputs[0].text
+            # print(f"Text: {text}")
+            or_data[idx]["extracted_qa"] = text
+        else:
+            print("No outputs for this prompt")
+            or_data[idx]["extracted_qa"] = None
 
     save_json(or_data, f"{path}/qa_extraction_{type}.json")
+    #import ray
+    #ray.shutdown()
     return or_data
 
 def format_gpt(data, path):
-    for idx, item in enumerate(data):
-        print(f"Reformatting item {idx} of {len(data)}")
+    for idx, item in enumerate(tqdm(data)):
         prompt = item["extracted_qa"]
         try:
             system_prompt = """You are a helpful assistant. Please find the Question Answer pairs, and format it as a json ({"question_answers": [{ "question": "", "answer": "" },...]})"""
             response = openai_inference("gpt-3.5-turbo", system_prompt, prompt)
             data[idx]["extracted_qa_pairs"] = response
         except Exception as e:
+            print(e)
             data[idx]["extracted_qa_pairs"] = None
 
         save_json(data, f"{path}/formatted_qa_extraction.json")
@@ -281,28 +280,55 @@ def format_gpt(data, path):
 
 def main():
     # filter view and coments pairs 
-    base_path = './neurips/2022/'
+    base_path = './neurips/2021/'
+    """
     review_figure, review_equation, review_table = check_for_qa_and_reference(base_path)
+    """
     
-    qas_figure = extract_qas(review_figure, "figure", base_path)
-    qas_equation = extract_qas(review_equation, "equation", base_path)
-    qas_table = extract_qas(review_table, "table", base_path)
-    print("Done!")
+    """
+    model = "meta-llama/Llama-3.1-8B-Instruct"
+    gpus = 4
+    tokenizer = AutoTokenizer.from_pretrained(model, trust_remote_code=True)
+    llm = LLM(
+            model, 
+            tokenizer_mode="auto",
+            tensor_parallel_size=gpus, 
+            enforce_eager=True)
+    
+    
+    review_figure = open_json(base_path + "/review_comment_figure.json")
+    review_equation = open_json(base_path + "/review_comment_equation.json")
+    review_table = open_json(base_path + "/review_comment_table.json")
 
-    # qas_figure = open_json(base_path+'/qa_extraction_figure.json')
-    # qas_equation = open_json(base_path+'/qa_extraction_equation.json')
-    # qas_table = open_json(base_path+'/qa_extraction_table.json')
+    
+    qas_figure = extract_qas(review_figure, "figure", base_path, tokenizer, llm)
+    qas_equation = extract_qas(review_equation, "equation", base_path, tokenizer, llm)
+    qas_table = extract_qas(review_table, "table", base_path, tokenizer, llm)
+    
+    print("Done!")
+    # Ensure Ray cleans up after execution
+    """
+    qas_figure = open_json(base_path+'/qa_extraction_figure.json')
+    qas_equation = open_json(base_path+'/qa_extraction_equation.json')
+    qas_table = open_json(base_path+'/qa_extraction_table.json')
+
+    # sampling only 1/3
+    qas_figure = qas_figure[:333]
+    qas_equation = qas_equation[:333]
+    qas_table = qas_table[:333]
+
+
     combined_qas = qas_figure + qas_equation + qas_table
     print(len(combined_qas))
-    format_gpt(combined_qas, base_path)
 
+    
+    #format_gpt(combined_qas, base_path)
+    print("check cleaned_qa_pair.")
     # ## Next cleaning step
     data = open_json(base_path + "/formatted_qa_extraction.json")
     print(len(data))
-
-    for idx, item in enumerate(data):
-        print(f"Cleaning item {idx} of {len(data)}")
-        #print(item)
+    count_cleaned = 0
+    for idx, item in enumerate(tqdm(data)):
         if item["extracted_qa_pairs"]:
             try:
                 text = json.loads(item["extracted_qa_pairs"])
@@ -313,9 +339,11 @@ def main():
             cleaned_qa = extract_qa_pairs(text)
             if cleaned_qa:
                 data[idx]["cleaned_qa"] = cleaned_qa
+                count_cleaned += 1
             else:
                 data[idx]["cleaned_qa"] = None
     print(len(data))
+    print("Count of cleaned items:", count_cleaned)
 
     save_json(data, base_path+"/cleaned_qa_pair.json")
 

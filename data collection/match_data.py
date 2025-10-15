@@ -177,8 +177,8 @@ def clean_matched_data(matched_data):
         
 
 def main():
-    base_path = './neurips/2022/'
-    dataset_path = './neurips/2022/'
+    base_path = './neurips/2021/'
+    dataset_path = './neurips/2021/'
 
     equations = open_json(base_path+'equation_data.json')
     formatted_equations = reformat_equations(equations)

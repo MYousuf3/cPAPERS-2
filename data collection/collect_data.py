@@ -143,6 +143,8 @@ def main():
     
     conference = 'NeurIPS.cc/2021/Conference/-/Blind_Submission'
     path = './neurips/2021/'
+    os.makedirs(path + 'tar_files', exist_ok=True)
+    os.makedirs(path + 'extracted_files', exist_ok=True)
     
     # conference = 'NeurIPS.cc/2022/Conference/-/Blind_Submission'
     # path = './neurips/2022/'

@@ -1,0 +1,42 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+*.egg-info/
+dist/
+build/
+
+# Environment
+.env
+.venv
+venv/
+ENV/
+
+# Large data files
+*.tar.gz
+*.zip
+Miniconda3-*.sh
+
+# Data directories with large files
+data collection/neurips/
+data collection/output.txt
+data collection/formated_figures.json
+
+# Experiment outputs
+experiments/outputs/
+experiments/__pycache__/
+*.log
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+

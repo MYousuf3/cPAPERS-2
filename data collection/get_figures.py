@@ -107,8 +107,8 @@ def is_folder_empty(folder_path):
 
 def main():
     figures_data_all_files = []
-    base_path = './neurips/2022/extracted_files/'
-    dest_path = './neurips/2022/figures_data.json'
+    base_path = './neurips/2021/extracted_files/'
+    dest_path = './neurips/2021/figures_data.json'
     
     for folder in tqdm(os.listdir(base_path)):
         folder_path = os.path.join(base_path, folder)

@@ -72,8 +72,11 @@ def write_record_to_jsonl(outfile, item):
 
 def load_jsonl(file):
     with open(file, 'r') as f:
-        data = f.readlines()
-    return [json.loads(record) for record in data]
+        if file.endswith('.jsonl'):
+            data = f.readlines()
+            return [json.loads(record) for record in data]
+        else:
+            return json.load(f)
 
 
 def extract_text_between_tags(text, start_tag="[ANS]", end_tag="[/ANS]"):

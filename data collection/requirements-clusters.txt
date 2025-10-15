@@ -1,0 +1,10 @@
+# Minimal dependencies to run data collection/clusters.py
+# bertopic[all] pulls in umap-learn, hdbscan, sentence-transformers and other optional deps
+bertopic[all]>=0.14.0
+sentence-transformers>=2.2.2
+scikit-learn>=1.0
+pandas>=1.3
+numpy>=1.21
+
+# Optional (if you prefer GPU-backed transformer models)
+# torch>=1.12

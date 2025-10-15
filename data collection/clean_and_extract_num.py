@@ -20,7 +20,7 @@ def extract_numbers(input_string):
         # Use re.findall() to find all occurrences of the pattern in the input string
         numbers = re.findall(pattern, input_string)
         
-        # Convert the list of strings to a list of integers
+        # Convert the list of strings to a list of xintegers
         # numbers = [int(num) for num in numbers]
         
         return numbers[0]
@@ -49,7 +49,10 @@ def main(base_path):
     all = []
 
     for item in qa:
-        cleaned = item['cleaned_qa']
+        try:
+            cleaned = item['cleaned_qa']
+        except:
+            cleaned = None
         paper_id = item['paper_id']
         if cleaned is None:
             null_count += 1
@@ -90,6 +93,6 @@ def main(base_path):
     save_json(all, base_path + '/full_cleaned_qa_with_nums.json')
 
 if __name__ == "__main__":
-    base_path = './neurips/2022'
+    base_path = './neurips/2021'
     main(base_path)
     

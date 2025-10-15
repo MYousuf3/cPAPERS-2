@@ -2,7 +2,7 @@ import os
 import subprocess
 import json
 
-base_path = './final_figure.json'
+base_path = './neurips/2021/final_figure.json'
 figure_path = './figure_files/'
 
 # Function to check if a file ends with .pdf or .eps
